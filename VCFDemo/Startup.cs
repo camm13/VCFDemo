@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using VCFDemo.Models;
 
 namespace VCFDemo
 {
@@ -29,6 +31,9 @@ namespace VCFDemo
         {
             // Add framework services.
             services.AddMvc();
+
+            services.AddDbContext<VCFDemoContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("VCFDemoContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +60,7 @@ namespace VCFDemo
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            SeedData.Initialize(app.ApplicationServices);
         }
     }
 }
